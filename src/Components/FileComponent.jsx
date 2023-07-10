@@ -48,6 +48,11 @@ function FileComponent() {
                 dataIndex: objKey,
                 key: objKey,
             }
+            
+            //ссылка на файл
+            if (objKey === 'url') {
+                tempObj.render = text => <a href='#'>{text}</a>
+            }
             tempColumns.push(tempObj)
         }
         data.forEach(el => {

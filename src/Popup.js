@@ -26,6 +26,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
                     show={fileNameChangeModalVisible}
                     onHide={() => setFileNameChangeModalVisible(false)}
                     currFileName={record.id}
+                    currFileComm={record.id}
                 />
             )}
             {imageSizeChangeModalVisible && <PictureSizeChangeModal show={imageSizeChangeModalVisible} onHide={() => setImageSizeChangeModalVisible(false)} currentImageSize={record.id}/>}

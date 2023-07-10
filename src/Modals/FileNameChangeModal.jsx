@@ -1,7 +1,9 @@
 import { Button, Modal, Form, Input } from 'antd'
 import { useState } from 'react';
 
-function FileNameChangeModal({show, onHide, currFileName}) {
+const { TextArea } = Input;
+
+function FileNameChangeModal({show, onHide, currFileName, currFileComm}) {
     const [confirmLoading, setConfirmLoading] = useState(false);
     
     const handleOk = () => {
@@ -15,7 +17,7 @@ function FileNameChangeModal({show, onHide, currFileName}) {
     return(
         <>
         <Modal
-          title="Изменение имени файла"
+          title="Изменение имени файла и комментария"
           open={show}
           onOk={handleOk}
           confirmLoading={confirmLoading}
@@ -27,7 +29,7 @@ function FileNameChangeModal({show, onHide, currFileName}) {
                 // labelCol={{ span: 4}}
                 // wrapperCol={{ span: 16}}
                 style={{ maxWidth: 400 }}
-                initialValues={{ fileName: currFileName }}
+                initialValues={{ fileName: currFileName, fileComm: currFileComm }}
                 autoComplete="off"
             >
                 <Form.Item
@@ -35,6 +37,13 @@ function FileNameChangeModal({show, onHide, currFileName}) {
                 name="fileName"
                 >
                     <Input placeholder={currFileName}/>
+                </Form.Item>
+
+                <Form.Item
+                label="Комментарий"
+                name="fileComm"
+                >
+                    <TextArea rows={4} maxLength={6} placeholder={currFileComm}/>
                 </Form.Item>
 
                 {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
