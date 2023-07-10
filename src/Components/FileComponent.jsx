@@ -1,4 +1,4 @@
-import { Button, Table, Popover, Dropdown, Upload, message } from 'antd'
+import { Button, Table, Popover, Dropdown, Upload, message, Modal } from 'antd'
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { FilePopup } from '../Popup';
@@ -25,11 +25,12 @@ const props = {
 function FileComponent() {
     const [dataSource, setDataSource] = useState([])
     const [columns, setColumns] = useState([])
-    const [flague, setFlague] = useState(false)
     const [popupState, setPopupState] = useState({
+        record: {},
         visible: false, 
         img: false,
-        x: 0, y: 0
+        x: 0,
+        y: 0
     })
 
     async function fetchFiles() {
@@ -46,20 +47,6 @@ function FileComponent() {
                 title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
                 dataIndex: objKey,
                 key: objKey,
-                // render: (text) => (
-                //     <>
-                //         <Dropdown
-                //         menu={{
-                //             items,
-                //         }}
-                //         placement="bottom"
-                //         trigger={['contextMenu']}
-                //         arrow
-                //         >
-                //             <p>{String(text)}</p>
-                //         </Dropdown>
-                //     </>
-                // )
             }
             tempColumns.push(tempObj)
         }
@@ -78,13 +65,25 @@ function FileComponent() {
         refetchInterval: 5000,
       });
       
-    function onRowLeftClick(record, index, event) {
+    function onRowRightClick(record, index, event) {
+        event.preventDefault();
+        
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
-            setPopupState({popup: {visible: false}})
+            setPopupState({
+                record,
+                visible: false,
+                x: event.clientX,
+                y: event.clientY
+            })
             document.removeEventListener(`click`, onClickOutside)
             })
         }
+
+        //console.log(record);
+
+        //Через react query по fileId ищем файл и загоняем его данные в record
+
         if (record.id != 1) {
             setPopupState({
                 record,
@@ -113,17 +112,17 @@ function FileComponent() {
                 <Button icon={<UploadOutlined />}>Загрузить файл</Button>
             </Upload>
             <Table  
-            dataSource={dataSource} columns={columns}
-            pagination={{
-                pageSizeOptions : ['5', '10', '30', '50', '100'], 
-                showSizeChanger : true ,
-                defaultPageSize: 5
-            }}
-            onRow={(record, rowIndex) => {
-                return {
-                    onClick: onRowLeftClick.bind(this, record, rowIndex)
-                };
-            }}    
+                dataSource={dataSource} columns={columns}
+                pagination={{
+                    pageSizeOptions : ['5', '10', '30', '50', '100'], 
+                    showSizeChanger : true ,
+                    defaultPageSize: 5
+                }}
+                onRow={(record, rowIndex) => {
+                    return {
+                        onContextMenu: onRowRightClick.bind(this, record, rowIndex)
+                    };
+                }}    
             />
             <FilePopup {...popupState}/>
         </>
