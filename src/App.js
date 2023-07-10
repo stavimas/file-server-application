@@ -10,7 +10,7 @@ function App() {
   const [switchFrameFlague, setSwitchFrameFlague] = useState(false)
 
   return (
-    <Layout style={{height:"100vh"}}>
+    <Layout style={{height:"100%"}}>
       <Header
         style={{
           display: 'flex',
