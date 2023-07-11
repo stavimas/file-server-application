@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "source_id": 1,
+        "result_id": null,
+        "status": "pending",
+        "algorithm": "resize",
+        "params": {
+            "width": 128,
+            "height": 128
+        }
+    },
+    {
+        "id": 2,
+        "source_id": 3,
+        "result_id": 4,
+        "status": "finished",
+        "algorithm": "resize",
+        "params": {
+            "width": 128,
+            "height": 128
+        }
+    },
+    {
+        "id": 3,
+        "source_id": 3,
+        "result_id": null,
+        "status": "error",
+        "algorithm": "flip"
+    },
+    {
+        "id": 4,
+        "source_id": 3,
+        "result_id": null,
+        "status": "processing",
+        "algorithm": "flip"
+    }
+]

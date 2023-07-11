@@ -1,10 +1,33 @@
 import { Button, Modal, Form, InputNumber } from 'antd'
 import { useState } from 'react';
 
-function PictureSizeChangeModal({show, onHide, currentImageSize}) {
+function PictureSizeChangeModal({show, onHide, fileId, currentImageSize}) {
     
     const onFinish = (e) => {
-        console.log(e);
+        //console.log(e);
+
+        // let tempObj = e;
+        // if (!e.imageWidth) { tempObj.imageWidth = currentImageSize; }
+        // if (!e.imageLength) { tempObj.imageLength = currentImageSize; }
+
+        // //console.log(tempObj);
+        // let data = {
+        //     "file_ids": fileId,
+        //     "algorithm": resize,
+        //     "params": {
+        //         "width": tempObj.imageWidth,
+        //         "length": tempObj.imageLength
+        //     }
+        // }
+
+        // fetch('/api/image-processing/', {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(data)
+        // })
+
         setTimeout(() => {
             onHide();
         }, 1000);

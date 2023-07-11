@@ -5,22 +5,41 @@ import { FilePopup } from '../Popup';
 import { UploadOutlined, FileOutlined } from '@ant-design/icons';
 
 const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+        action: '/api/file-server/',
+        method: 'POST',
+        headers: {
+            authorization: 'authorization-text',
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+        customRequest: ({onSuccess, onError, file}) => {
+            let data = {
+                "name": file.name,
+                "comment": ""
+            }
+            //console.log(data);
+            fetch('/api/file-server/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                success: (resp) => {
+                    console.log(resp);
+                    onSuccess(file)
+                },
+                failure: (err) => {
+                    const error = new Error(err)
+                    onError({event: error})
+                }
+            })
+        }
+    };
 
 function FileComponent() {
     const [dataSource, setDataSource] = useState([])
@@ -39,29 +58,57 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        const response = await fetch('https://jsonplaceholder.typicode.com/photos');
-        //const response = await fetch('tempJson.json');
+        //const response = await fetch('https://jsonplaceholder.typicode.com/photos');
+        const response = await fetch('tempFileServ.json');
         const data =  await response.json();
-        const tempColumns = []
         const tempDataSource = []
     
         //console.log(data);
 
-        for (let objKey of Object.keys(data[0])) {
-            let tempObj = {
-                title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
-                dataIndex: objKey,
-                key: objKey,
-            }
+        const tempColumns = [
+            {
+                title: "Name",
+                dataIndex: "name",
+                key: "name"
+            },
+            {
+                title: "Extension",
+                dataIndex: "extension",
+                key: "extension"
+            },
+            {
+                title: "Size",
+                dataIndex: "size",
+                key: "size"
+            },
+            {
+                title: "Comment",
+                dataIndex: "comment",
+                key: "comment"
+            },
+        ]
+
+        // for (let objKey of Object.keys(data[0])) {
+        //     let tempObj = {
+        //         title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
+        //         dataIndex: objKey,
+        //         key: objKey,
+        //     }
             
-            //ссылка на файл
-            if (objKey === 'url') {
-                tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
-            }
-            tempColumns.push(tempObj)
-        }
+        //     //ссылка на файл
+        //     if (objKey === 'url') {
+        //         tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
+        //     }
+        //     tempColumns.push(tempObj)
+        // }
         data.forEach(el => {
-            tempDataSource.push(el);
+            let tempObj = {
+                "name": el.name,
+                "extension": el.extension,
+                "size": el.size,
+                "comment": el.comment
+            }
+            tempDataSource.push(tempObj);
         });
     
         // console.log(columns);
@@ -69,8 +116,10 @@ function FileComponent() {
     
         setDataSource(tempDataSource);
         setColumns(tempColumns);
+
+        return data;
     }
-      
+
     function onRowRightClick(record, index, event) {
         event.preventDefault();
         

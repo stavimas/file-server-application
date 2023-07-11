@@ -1,7 +1,7 @@
 import { Button, Modal, Form, Input, InputNumber } from 'antd'
 import { useState } from 'react';
 
-function PictureAngleChangeModal({show, onHide, currentImageAngle}) {
+function PictureAngleChangeModal({show, onHide, fileId, currentImageAngle}) {
     
     const onFinish = (e) => {
         console.log(e);

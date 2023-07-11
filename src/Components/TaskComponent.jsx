@@ -14,27 +14,81 @@ function TaskComponent() {
     })
 
     async function fetchTasks() {
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+        //const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+        //const response = await fetch('/api/image-processing/');
+        const response = await fetch('tempTaskServ.json');
         const data =  await response.json();
-        const tempColumns = []
-        const tempDataSource = []
-    
-        for (let objKey of Object.keys(data[0])) {
-            let tempObj = {
-                title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
-                dataIndex: objKey,
-                key: objKey
-            }
+        //console.log(response);
+        //console.log(data);
+        const tempDataSource = [];
+        //const tempColumns = [];
 
-            //ссылка на файл
-            if (objKey === 'url') {
-                tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
-            }
-            
-            tempColumns.push(tempObj)
-        }
+        const tempColumns = [
+            {
+                title: "Id",
+                dataIndex: "id",
+                key: "id"
+            },
+            {
+                title: "Status",
+                dataIndex: "status",
+                key: "status"
+            },
+            {
+                title: "Algorithm",
+                dataIndex: "algorithm",
+                key: "algorithm"
+            },
+            {
+                title: "Source",
+                dataIndex: "source",
+                key: "source",
+                render: (text) => {
+                    if (text !== null) {
+                        // fetch(`/api/file-server/${text}/download`).then((response) => {
+                        //     <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
+                        // })
+                        return <Button icon={<FileOutlined />}>{text}</Button>
+                    }
+                }
+                // render: (text) => <Button icon={<FileOutlined />}>{text}</Button>
+            },
+            {
+                title: "Result",
+                dataIndex: "result",
+                key: "result",
+                render: (text) => {
+                    if (text !== null) {
+                        // fetch(`/api/file-server/${text}/download`).then((response) => {
+                        //     <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
+                        // })
+                        return <Button icon={<FileOutlined />}>{text}</Button>
+                    }
+                }
+            },
+        ]
+    
+        // for (let objKey of Object.keys(data[0])) {
+        //     let tempObj = {
+        //         title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
+        //         dataIndex: objKey,
+        //         key: objKey
+        //     }
+        //     tempColumns.push(tempObj)
+        // }
+        // data.forEach(el => {
+        //     tempDataSource.push(el);
+        // });
+
         data.forEach(el => {
-            tempDataSource.push(el);
+            let tempObj = {
+                "id": el.id,
+                "status": el.status,
+                "algorithm": el.algorithm,
+                "source": el.source_id,
+                "result": el.result_id
+            }
+            tempDataSource.push(tempObj);
         });
 
         // console.log(columns);
@@ -42,6 +96,8 @@ function TaskComponent() {
 
         setDataSource(tempDataSource);
         setColumns(tempColumns);
+
+        return data;
     }
 
     const data = useQuery("tasks", fetchTasks)
@@ -62,7 +118,7 @@ function TaskComponent() {
             })
         }
 
-        if (record.id != 1) {
+        if (record.status === "error") {
             setPopupState({
                 record,
                 visible: true,
