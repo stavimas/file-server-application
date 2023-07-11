@@ -17,8 +17,12 @@ const FilePopup = ({record, visible, img, x, y}) => {
             {visible &&
             <ul className="popup" style={{left: `${x}px`, top: `${y}px`}}>
                 <li onClick={() => setFileNameChangeModalVisible(true)}>Изменить имя файла</li>
-                {img && <li onClick={() => setImageAngleChangeModalVisible(true)}>Изменить угол поворота</li>}
-                {img && <li onClick={() => setImageSizeChangeModalVisible(true)}>Изменить размер</li>}
+                {img && (
+                    <li onClick={() => setImageSizeChangeModalVisible(true)}>Изменить размер</li>
+                )}
+                {img && (
+                    <li onClick={() => setImageAngleChangeModalVisible(true)}>Изменить угол поворота</li>
+                )}
             </ul>
             }
             {fileNameChangeModalVisible && (
@@ -29,15 +33,32 @@ const FilePopup = ({record, visible, img, x, y}) => {
                     currFileComm={record.id}
                 />
             )}
-            {imageSizeChangeModalVisible && <PictureSizeChangeModal show={imageSizeChangeModalVisible} onHide={() => setImageSizeChangeModalVisible(false)} currentImageSize={record.id}/>}
-            {imageAngleChangeModalVisible && <PictureAngleChangeModal show={imageAngleChangeModalVisible} onHide={() => setImageAngleChangeModalVisible(false)} currentImageAngle={record.id}/>}
+            {imageSizeChangeModalVisible && (
+                <PictureSizeChangeModal 
+                    show={imageSizeChangeModalVisible} 
+                    onHide={() => setImageSizeChangeModalVisible(false)} 
+                    currentImageSize={record.id}
+                    />
+            )}
+            {imageAngleChangeModalVisible && (
+                <PictureAngleChangeModal 
+                    show={imageAngleChangeModalVisible} 
+                    onHide={() => setImageAngleChangeModalVisible(false)} 
+                    currentImageAngle={record.id}
+                    />
+            )}
+
         </>
     )
 }
 
 const TaskPopup = ({record, visible, x, y}) => visible &&
   <ul className="popup" style={{left: `${x}px`, top: `${y}px`}}>
-    <li>Выполнить задачу заново</li>
+    <li onClick={reloadTask}>Выполнить задачу заново</li>
   </ul>
+
+function reloadTask() {
+    return 0;
+}
 
 export {FilePopup, TaskPopup};

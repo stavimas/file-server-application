@@ -1,15 +1,14 @@
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, InputNumber } from 'antd'
 import { useState } from 'react';
 
 function PictureAngleChangeModal({show, onHide, currentImageAngle}) {
-    const [confirmLoading, setConfirmLoading] = useState(false);
     
-    const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-        onHide();
-        setConfirmLoading(false);
-    }, 1000);
+    const onFinish = (e) => {
+        console.log(e);
+
+        setTimeout(() => {
+            onHide();
+        }, 1000);
     };
 
     return(
@@ -17,8 +16,7 @@ function PictureAngleChangeModal({show, onHide, currentImageAngle}) {
         <Modal
           title="Изменение размеров изображения"
           open={show}
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
+          footer={null}
           onCancel={onHide}
           style={{ maxWidth: 400 }}
         >
@@ -27,24 +25,20 @@ function PictureAngleChangeModal({show, onHide, currentImageAngle}) {
                 style={{ maxWidth: 400 }}
                 initialValues={{ imageAngle: currentImageAngle }}
                 autoComplete="off"
+                onFinish={onFinish}
             >
                 <Form.Item
-                label="Размер изображения"
+                label="Угол поворота в градусах"
                 name="imageAngle"
-                rules={[
-                    {
-                        type: 'number'
-                    }
-                ]}
                 >
-                    <Input placeholder={currentImageAngle}/>
+                    <InputNumber style={{width: '100%'}} min={0} max={180} placeholder={currentImageAngle}/>
                 </Form.Item>
 
-                {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
+                <Form.Item>
+                    <Button block type="primary" htmlType="submit">
                         Изменить
                     </Button>
-                </Form.Item> */}
+                </Form.Item>
             </Form>
         </Modal>
       </>

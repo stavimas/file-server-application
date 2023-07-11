@@ -2,7 +2,7 @@ import { Button, Table, Popover, Dropdown, Upload, message, Modal } from 'antd'
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { FilePopup } from '../Popup';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, FileOutlined } from '@ant-design/icons';
 
 const props = {
     name: 'file',
@@ -33,6 +33,11 @@ function FileComponent() {
         y: 0
     })
 
+    //reactQuery для получения данных о файлах
+    const data = useQuery('files', fetchFiles, {
+        refetchInterval: 5000,
+      });
+
     async function fetchFiles() {
         const response = await fetch('https://jsonplaceholder.typicode.com/photos');
         //const response = await fetch('tempJson.json');
@@ -51,7 +56,7 @@ function FileComponent() {
             
             //ссылка на файл
             if (objKey === 'url') {
-                tempObj.render = text => <a href='#'>{text}</a>
+                tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
             }
             tempColumns.push(tempObj)
         }
@@ -65,10 +70,6 @@ function FileComponent() {
         setDataSource(tempDataSource);
         setColumns(tempColumns);
     }
-
-    const data = useQuery('files', fetchFiles, {
-        refetchInterval: 5000,
-      });
       
     function onRowRightClick(record, index, event) {
         event.preventDefault();
@@ -114,7 +115,7 @@ function FileComponent() {
     return (
         <>
             <Upload {...props}>
-                <Button icon={<UploadOutlined />}>Загрузить файл</Button>
+                <Button icon={<UploadOutlined />} style={{marginBottom: '7px'}}>Загрузить файл</Button>
             </Upload>
             <Table  
                 dataSource={dataSource} columns={columns}

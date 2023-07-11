@@ -2,6 +2,7 @@ import { Button, Table, Popover, Dropdown } from 'antd'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query';
 import {TaskPopup} from '../Popup';
+import { FileOutlined } from '@ant-design/icons';
 
 function TaskComponent() {
 
@@ -12,33 +13,6 @@ function TaskComponent() {
         x: 0, y: 0
     })
 
-    const items = [
-    {
-        key: '1',
-        label: (
-        <a>
-            Изменить имя файла
-        </a>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-        <a>
-            Повернуть
-        </a>
-        ),
-    },
-    {
-        key: '3',
-        label: (
-        <a>
-            Изменить размер
-        </a>
-        ),
-    },
-    ];
-
     async function fetchTasks() {
         const response = await fetch('https://jsonplaceholder.typicode.com/todos');
         const data =  await response.json();
@@ -46,26 +20,17 @@ function TaskComponent() {
         const tempDataSource = []
     
         for (let objKey of Object.keys(data[0])) {
-            let tempItems = items;
             let tempObj = {
                 title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
                 dataIndex: objKey,
-                key: objKey,
-                render: (text) => (
-                    <>
-                        <Dropdown
-                        menu={{
-                            tempItems,
-                        }}
-                        placement="bottom"
-                        trigger={['contextMenu']}
-                        arrow
-                        >
-                            <p>{String(text)}</p>
-                        </Dropdown>
-                    </>
-                )
+                key: objKey
             }
+
+            //ссылка на файл
+            if (objKey === 'url') {
+                tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
+            }
+            
             tempColumns.push(tempObj)
         }
         data.forEach(el => {
@@ -81,13 +46,22 @@ function TaskComponent() {
 
     const data = useQuery("tasks", fetchTasks)
 
-    function onRowLeftClick(record, index, event) {
+    function onRowRightClick(record, index, event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
-            setPopupState({popup: {visible: false}})
+            setPopupState({
+                record,
+                visible: false,
+                x: event.clientX,
+                y: event.clientY
+            })
             document.removeEventListener(`click`, onClickOutside)
             })
         }
+
         if (record.id != 1) {
             setPopupState({
                 record,
@@ -100,13 +74,11 @@ function TaskComponent() {
             setPopupState({
                 record,
                 visible: false,
-                img: false,
                 x: event.clientX,
                 y: event.clientY
             })
         }
         //console.log(popupState)
-        event.stopPropagation();
     }
 
     return (
@@ -120,7 +92,7 @@ function TaskComponent() {
             }}
             onRow={(record, rowIndex) => {
                 return {
-                    onClick: onRowLeftClick.bind(this, record, rowIndex)
+                    onContextMenu: onRowRightClick.bind(this, record, rowIndex)
                 };
             }}    
              />

@@ -18,8 +18,8 @@ function App() {
           gap: '15px'
         }}
       >
-        <Button size='large' onClick={() => {setSwitchFrameFlague(false)}}>Files</Button>
-        <Button size='large' onClick={() => {setSwitchFrameFlague(true)}}>Tasks</Button>
+        <Button onClick={() => {setSwitchFrameFlague(false)}}>Files</Button>
+        <Button onClick={() => {setSwitchFrameFlague(true)}}>Tasks</Button>
       </Header>
       <Content
         style={{

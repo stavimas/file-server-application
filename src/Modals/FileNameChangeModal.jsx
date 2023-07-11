@@ -4,27 +4,26 @@ import { useState } from 'react';
 const { TextArea } = Input;
 
 function FileNameChangeModal({show, onHide, currFileName, currFileComm}) {
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    
-    const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-        onHide();
-        setConfirmLoading(false);
-    }, 1000);
-    };
+
+    const onFinish = (e) => {
+        console.log(e);
+        
+        setTimeout(() => {
+            onHide();
+        }, 1000);
+    }
 
     return(
         <>
         <Modal
           title="Изменение имени файла и комментария"
           open={show}
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
+          footer={null}
           onCancel={onHide}
           style={{ maxWidth: 400 }}
         >
             <Form
+                onFinish={onFinish}
                 name="changeFileNameForm"
                 // labelCol={{ span: 4}}
                 // wrapperCol={{ span: 16}}
@@ -43,14 +42,14 @@ function FileNameChangeModal({show, onHide, currFileName, currFileComm}) {
                 label="Комментарий"
                 name="fileComm"
                 >
-                    <TextArea rows={4} maxLength={6} placeholder={currFileComm}/>
+                    <TextArea rows={4} placeholder={currFileComm}/>
                 </Form.Item>
 
-                {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
+                <Form.Item>
+                    <Button block type="primary" htmlType="submit">
                         Изменить
                     </Button>
-                </Form.Item> */}
+                </Form.Item>
             </Form>
         </Modal>
       </>
