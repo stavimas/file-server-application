@@ -91,7 +91,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
                     )}
                 </ul>
             }
-            {/* {console.log(fileNameChangeModalVisible)} */}
+
             {fileNameChangeModalVisible && (
                 <FileNameChangeModal
                     show={fileNameChangeModalVisible}
@@ -126,6 +126,7 @@ async function reloadTask(taskId) {
         
     // }
     // const data = await response.json();
+
     const result = await fetch(`${api}/image-processing/${taskId}/restart`, 
     {
         method: "POST",
@@ -133,7 +134,6 @@ async function reloadTask(taskId) {
         mode: 'no-cors'
     });
     return result;
-    return 0;
 }
 
 const TaskPopup = ({record, visible, x, y}) => visible &&

@@ -22,25 +22,6 @@ const props = {
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
-        // customRequest: ({onSuccess, onError, file}) => {
-        //     let data = {
-        //         "name": file.name,
-        //         "comment": ""
-        //     }
-        //     console.log(data);
-        //     fetch(`/${api}/file-server/`, {
-        //         method: 'POST',
-        //         body: JSON.stringify(data),
-        //         success: (resp) => {
-        //             console.log(resp);
-        //             onSuccess(file)
-        //         },
-        //         failure: (err) => {
-        //             const error = new Error(err)
-        //             onError({event: error})
-        //         }
-        //     })
-        // }
     };
 
 function FileComponent() {
@@ -61,9 +42,8 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        //const response = await fetch('https://jsonplaceholder.typicode.com/photos');
-        const response = await fetch(`${api}/file-server/`);
-        //const response = await fetch('tempFileServ.json');
+        //const response = await fetch(`${api}/file-server/`);
+        const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
     
@@ -73,7 +53,12 @@ function FileComponent() {
             {
                 title: "Name",
                 dataIndex: "name",
-                key: "name"
+                key: "name",
+                sorter: (a, b) => {
+                    if(a.name < b.name) { return -1; }
+                    if(a.name > b.name) { return 1; }
+                    return 0;
+                },
             },
             {
                 title: "Extension",
@@ -92,19 +77,6 @@ function FileComponent() {
             },
         ]
 
-        // for (let objKey of Object.keys(data[0])) {
-        //     let tempObj = {
-        //         title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
-        //         dataIndex: objKey,
-        //         key: objKey,
-        //     }
-            
-        //     //ссылка на файл
-        //     if (objKey === 'url') {
-        //         tempObj.render = text => <Button icon={<FileOutlined />} href={text} target="_blank"></Button>
-        //     }
-        //     tempColumns.push(tempObj)
-        // }
         data.forEach(el => {
             let tempObj = {
                 "key": el.id,
@@ -128,12 +100,11 @@ function FileComponent() {
 
     function onRowRightClick(record, index, dataQuery, event) {
         event.preventDefault();
-        //console.log(1);
         // console.log(dataQuery);
         // console.log(record.key);
 
         const dataObject = dataQuery.data.find((item) => item.id === record.key)
-        console.log(dataObject)
+        //console.log(dataObject)
         
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
@@ -194,7 +165,6 @@ function FileComponent() {
                 }}    
             />
             <FilePopup {...popupState}/>
-            {/* {console.log(popupState)} */}
         </>
     );
 }

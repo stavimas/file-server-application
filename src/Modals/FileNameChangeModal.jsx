@@ -42,8 +42,6 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
             <Form
                 onFinish={onFinish}
                 name="changeFileNameForm"
-                // labelCol={{ span: 4}}
-                // wrapperCol={{ span: 16}}
                 style={{ maxWidth: 400 }}
                 initialValues={{ fileName: currFileName, fileComm: currFileComm }}
                 autoComplete="off"

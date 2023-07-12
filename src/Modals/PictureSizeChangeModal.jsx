@@ -46,7 +46,6 @@ function PictureSizeChangeModal({show, onHide, fileId}) {
             <Form
                 name="changePictureSizeForm"
                 style={{ maxWidth: 400 }}
-                // initialValues={{ imageWidth: 1366, imageLength: 768}}
                 autoComplete="off"
                 onFinish={onFinish}
             >
