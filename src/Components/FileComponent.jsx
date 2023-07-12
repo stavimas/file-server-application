@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { FilePopup } from './Popup';
 import { UploadOutlined } from '@ant-design/icons';
 import { api } from '../consts';
+import ImageModal from '../Modals/ImageModal';
 
 const props = {
         action: `${api}/file-server/`,
@@ -35,6 +36,8 @@ function FileComponent() {
         y: 0
     })
     const [popupVisibility, setPopupVisibility] = useState(false)
+    const [imageModalVisibility, setImageModalVisibility] = useState(false)
+    const [image, setImage] = useState([])
 
     //reactQuery для получения данных о файлах
     const data = useQuery('files', fetchFiles, {
@@ -42,8 +45,8 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        //const response = await fetch(`${api}/file-server/`);
-        const response = await fetch('tempFileServ.json');
+        const response = await fetch(`${api}/file-server/`);
+        //const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
     
@@ -146,6 +149,24 @@ function FileComponent() {
         event.stopPropagation();
     }
 
+    function onRowLeftClick(record, index, dataQuery, event) {
+        event.preventDefault(); 
+        event.stopPropagation();
+        const dataObject = dataQuery.data.find((item) => item.id === record.key)
+        if (dataObject.extension === ".png" || dataObject.extension === ".jpg" || dataObject.extension === ".jpeg") {
+            let tempImage = [
+                {
+                    id: dataObject.id,
+                    name: dataObject.name,
+                    size: dataObject.size
+                }
+            ];
+    
+            setImage(tempImage);
+            setImageModalVisibility(true);
+        }
+    }
+
     return (
         <>
             <Upload {...props}>
@@ -160,11 +181,19 @@ function FileComponent() {
                 }}
                 onRow={(record, rowIndex) => {
                     return {
-                        onContextMenu: onRowRightClick.bind(this, record, rowIndex, data)
+                        onContextMenu: onRowRightClick.bind(this, record, rowIndex, data),
+                        onClick: onRowLeftClick.bind(this, record, rowIndex, data)
                     };
                 }}    
             />
             <FilePopup {...popupState}/>
+            {imageModalVisibility && (
+                <ImageModal 
+                show={imageModalVisibility} 
+                onHide={() => setImageModalVisibility(false)}
+                imageArr={image}
+                />
+            )}
         </>
     );
 }

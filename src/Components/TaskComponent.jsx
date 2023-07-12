@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { TaskPopup } from './Popup';
 import { FileOutlined } from '@ant-design/icons';
 import { api } from '../consts';
+import ImageModal from '../Modals/ImageModal';
 
 function TaskComponent() {
 
@@ -13,10 +14,12 @@ function TaskComponent() {
         visible: false, 
         x: 0, y: 0
     })
+    const [imageModalVisibility, setImageModalVisibility] = useState(false)
+    const [image, setImage] = useState([])
 
     async function fetchTasks() {
-        //const response = await fetch(`${api}/image-processing/`);
-        const response = await fetch('tempTaskServ.json');
+        const response = await fetch(`${api}/image-processing/`);
+        //const response = await fetch('tempTaskServ.json');
         //console.log(response);
         const data =  await response.json();
         
@@ -129,6 +132,38 @@ function TaskComponent() {
         //console.log(popupState)
     }
 
+    async function onRowLeftClick(record, index, dataQuery, event) {
+        event.preventDefault(); 
+        event.stopPropagation();
+
+        const dataObject = dataQuery.data.find((item) => item.id === record.key);
+        console.log(dataObject);
+        if (dataObject.source_id && dataObject.result_id) {
+            let sourceImg = await fetch(`${api}/file-server/${dataObject.source_id}`).then(response => response.json());
+            let resultImg = await fetch(`${api}/file-server/${dataObject.result_id}`).then(response => response.json());
+
+            // console.log(dataObject);
+            // console.log(sourceImg);
+            // console.log(resultImg);
+                
+            let tempImage = [
+                {
+                    id: sourceImg.id,
+                    name: sourceImg.name,
+                    size: sourceImg.size
+                },
+                {
+                    id: resultImg.id,
+                    name: resultImg.name,
+                    size: resultImg.size
+                }
+            ];
+
+            setImage(tempImage);
+            setImageModalVisibility(true);
+        }
+    }
+
     return (
         <>
             <Table 
@@ -140,11 +175,19 @@ function TaskComponent() {
             }}
             onRow={(record, rowIndex) => {
                 return {
-                    onContextMenu: onRowRightClick.bind(this, record, rowIndex, data)
+                    onContextMenu: onRowRightClick.bind(this, record, rowIndex, data),
+                    onClick: onRowLeftClick.bind(this, record, rowIndex, data)
                 };
             }}    
              />
             <TaskPopup {...popupState}/>
+            {imageModalVisibility && (
+                <ImageModal 
+                show={imageModalVisibility} 
+                onHide={() => setImageModalVisibility(false)}
+                imageArr={image}
+                />
+            )}
         </>
     );
 }
