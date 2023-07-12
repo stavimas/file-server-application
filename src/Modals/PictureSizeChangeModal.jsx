@@ -1,5 +1,5 @@
 import { Button, Modal, Form, InputNumber } from 'antd'
-import { useState } from 'react';
+import { api } from '../consts';
 
 function PictureSizeChangeModal({show, onHide, fileId}) {
     
@@ -20,7 +20,7 @@ function PictureSizeChangeModal({show, onHide, fileId}) {
         //     }
         // }
 
-        // fetch('/api/image-processing/', {
+        // fetch(`/${api}/image-processing/`, {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json",

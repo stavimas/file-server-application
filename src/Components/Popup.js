@@ -1,8 +1,8 @@
-import React from "react"
-import './index.css'
-import FileNameChangeModal from "./Modals/FileNameChangeModal"
-import PictureSizeChangeModal from "./Modals/PictureSizeChangeModal"
-import PictureAngleChangeModal from "./Modals/PictureAngleChangeModal"
+import '../index.css'
+import { api } from '../consts';
+import FileNameChangeModal from "../Modals/FileNameChangeModal"
+import PictureSizeChangeModal from "../Modals/PictureSizeChangeModal"
+import PictureAngleChangeModal from "../Modals/PictureAngleChangeModal"
 import { useState } from "react"
 
 
@@ -14,7 +14,7 @@ const FilePopup = ({record, img, x, y}) => {
     //console.log(record);
 
     async function downLoadFile(fileId) {
-        // const result = await fetch(`/api/file-server/${fileId}`);
+        // const result = await fetch(`/${api}/file-server/${fileId}`);
         // return result;
         return 0;
     }
@@ -28,7 +28,7 @@ const FilePopup = ({record, img, x, y}) => {
         //     }
         // }
 
-        // fetch('/api/image-processing/', {
+        // fetch(`/${api}/image-processing/`, {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ const FilePopup = ({record, img, x, y}) => {
         //     }
         // }
 
-        // fetch('/api/image-processing/', {
+        // fetch(`/${api}/image-processing/`, {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json",
@@ -109,9 +109,9 @@ const FilePopup = ({record, img, x, y}) => {
 }
 
 async function reloadTask(taskId) {
-    // const response = await fetch(`api/image-processing/${taskId}`);
+    // const response = await fetch(`/${api}/image-processing/${taskId}`);
     // const data = await response.json();
-    // const result = await fetch(`/api/image-processing/${taskId}/restart`, 
+    // const result = await fetch(`/${api}/image-processing/${taskId}/restart`, 
     // {
     //     method: "POST",
     //     body: JSON.stringify(data)

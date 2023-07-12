@@ -1,5 +1,5 @@
 import { Button, Modal, Form, Input } from 'antd'
-import { useState } from 'react';
+import { api } from '../consts';
 
 const { TextArea } = Input;
 
@@ -17,7 +17,7 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
         //     "comment": tempObj.fileComm
         // }
 
-        // fetch(`/api/file-server/${fileId}`, {
+        // fetch(`/${api}/file-server/${fileId}`, {
         //     method: "PUT",
         //     headers: {
         //         "Content-Type": "application/json",

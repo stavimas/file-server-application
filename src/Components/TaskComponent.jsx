@@ -1,8 +1,9 @@
-import { Button, Table, Popover, Dropdown } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Table } from 'antd'
+import { useState } from 'react'
 import { useQuery } from 'react-query';
-import {TaskPopup} from '../Popup';
+import { TaskPopup } from './Popup';
 import { FileOutlined } from '@ant-design/icons';
+import { api } from '../consts';
 
 function TaskComponent() {
 
@@ -15,11 +16,12 @@ function TaskComponent() {
 
     async function fetchTasks() {
         //const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-        //const response = await fetch('/api/image-processing/');
-        const response = await fetch('tempTaskServ.json');
+        const response = await fetch(`${api}/image-processing/`);
+        //const response = await fetch('tempTaskServ.json');
+        console.log(response);
         const data =  await response.json();
-        //console.log(response);
-        //console.log(data);
+        
+        console.log(data);
         const tempDataSource = [];
         //const tempColumns = [];
 
@@ -45,10 +47,10 @@ function TaskComponent() {
                 key: "source",
                 render: (text) => {
                     if (text !== null) {
-                        // fetch(`/api/file-server/${text}/download`).then((response) => {
-                        //     <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        // })
-                        return <Button icon={<FileOutlined />}>{text}</Button>
+                        fetch(`${api}/file-server/${text}/download`).then((response) => {
+                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
+                        })
+                        //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
                 // render: (text) => <Button icon={<FileOutlined />}>{text}</Button>
@@ -59,10 +61,10 @@ function TaskComponent() {
                 key: "result",
                 render: (text) => {
                     if (text !== null) {
-                        // fetch(`/api/file-server/${text}/download`).then((response) => {
-                        //     <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        // })
-                        return <Button icon={<FileOutlined />}>{text}</Button>
+                        fetch(`${api}/file-server/${text}/download`).then((response) => {
+                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
+                        })
+                        //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
             },
@@ -103,14 +105,16 @@ function TaskComponent() {
 
     const data = useQuery("tasks", fetchTasks)
 
-    function onRowRightClick(record, index, event) {
+    function onRowRightClick(record, index, dataQuery, event) {
         event.preventDefault();
         event.stopPropagation();
+
+        const dataObject = dataQuery.data.find((item) => item.id === record.key)
 
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
             setPopupState({
-                record,
+                record: dataObject,
                 visible: false,
                 x: event.clientX,
                 y: event.clientY
@@ -119,9 +123,9 @@ function TaskComponent() {
             })
         }
 
-        if (record.status === "error") {
+        if (dataObject.status === "error") {
             setPopupState({
-                record,
+                record: dataObject,
                 visible: true,
                 x: event.clientX,
                 y: event.clientY
@@ -129,7 +133,7 @@ function TaskComponent() {
         }
         else {
             setPopupState({
-                record,
+                record: dataObject,
                 visible: false,
                 x: event.clientX,
                 y: event.clientY
@@ -149,7 +153,7 @@ function TaskComponent() {
             }}
             onRow={(record, rowIndex) => {
                 return {
-                    onContextMenu: onRowRightClick.bind(this, record, rowIndex)
+                    onContextMenu: onRowRightClick.bind(this, record, rowIndex, data)
                 };
             }}    
              />

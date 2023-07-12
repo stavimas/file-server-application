@@ -1,11 +1,12 @@
-import { Button, Table, Popover, Dropdown, Upload, message, Modal } from 'antd'
+import { Button, Table, Upload, message } from 'antd'
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { FilePopup } from '../Popup';
-import { UploadOutlined, FileOutlined } from '@ant-design/icons';
+import { FilePopup } from './Popup';
+import { UploadOutlined } from '@ant-design/icons';
+import { api } from '../consts';
 
 const props = {
-        action: '/api/file-server/',
+        action: `${api}/file-server/`,
         method: 'POST',
         headers: {
             authorization: 'authorization-text',
@@ -26,7 +27,7 @@ const props = {
         //         "comment": ""
         //     }
         //     console.log(data);
-        //     fetch('/api/file-server/', {
+        //     fetch(`/${api}/file-server/`, {
         //         method: 'POST',
         //         body: JSON.stringify(data),
         //         success: (resp) => {
@@ -59,6 +60,7 @@ function FileComponent() {
 
     async function fetchFiles() {
         //const response = await fetch('https://jsonplaceholder.typicode.com/photos');
+        //const response = await fetch(`${api}/file-server/`);
         const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
