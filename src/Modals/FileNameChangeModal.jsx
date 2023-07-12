@@ -7,23 +7,23 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
 
     const onFinish = (e) => {
         //console.log(e);
-        // let tempObj = e;
-        // if (!e.fileName) { tempObj.fileName = currFileName; }
-        // if (!e.fileComm) { tempObj.fileComm = currFileComm; }
+        let tempObj = e;
+        if (!e.fileName) { tempObj.fileName = currFileName; }
+        if (!e.fileComm) { tempObj.fileComm = currFileComm; }
 
-        // //console.log(tempObj);
-        // let data = {
-        //     "name": tempObj.fileName,
-        //     "comment": tempObj.fileComm
-        // }
+        //console.log(tempObj);
+        let data = {
+            "name": tempObj.fileName,
+            "comment": tempObj.fileComm
+        }
 
-        // fetch(`/${api}/file-server/${fileId}`, {
-        //     method: "PUT",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(data)
-        // })
+        fetch(`${api}/file-server/${fileId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data)
+        })
 
         setTimeout(() => {
             onHide();

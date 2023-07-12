@@ -29,7 +29,11 @@ function TaskComponent() {
             {
                 title: "Id",
                 dataIndex: "id",
-                key: "id"
+                key: "id",
+                sorter: {
+                    compare: (a, b) => a.id - b.id,
+                    multiple: 2,
+                  },
             },
             {
                 title: "Status",
@@ -47,9 +51,11 @@ function TaskComponent() {
                 key: "source",
                 render: (text) => {
                     if (text !== null) {
-                        fetch(`${api}/file-server/${text}/download`).then((response) => {
-                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        })
+                        // fetch(`${api}/file-server/${text}/download`).then((response) => {
+                        //     return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
+                        // })
+                        return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
+
                         //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
@@ -61,9 +67,10 @@ function TaskComponent() {
                 key: "result",
                 render: (text) => {
                     if (text !== null) {
-                        fetch(`${api}/file-server/${text}/download`).then((response) => {
-                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        })
+                        // fetch(`${api}/file-server/${text}/download`).then((response) => {
+                        //     return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
+                        // })
+                        return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
                         //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
@@ -86,7 +93,7 @@ function TaskComponent() {
             let tempObj = {
                 "key": el.id,
                 "id": el.id,
-                "status": el.status,
+                "status": el.status.toLowerCase(),
                 "algorithm": el.algorithm,
                 "source": el.source_id,
                 "result": el.result_id
@@ -110,6 +117,7 @@ function TaskComponent() {
         event.stopPropagation();
 
         const dataObject = dataQuery.data.find((item) => item.id === record.key)
+        dataObject.status = dataObject.status.toLowerCase();
 
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {

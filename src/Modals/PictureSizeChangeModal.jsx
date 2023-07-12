@@ -6,27 +6,28 @@ function PictureSizeChangeModal({show, onHide, fileId}) {
     const onFinish = (e) => {
         //console.log(e);
 
-        // let tempObj = e;
-        // if (!e.imageWidth) { tempObj.imageWidth = 1366; }
-        // if (!e.imageLength) { tempObj.imageLength = 768; }
+        let tempObj = e;
+        if (!e.imageWidth) { tempObj.imageWidth = 1366; }
+        if (!e.imageLength) { tempObj.imageLength = 768; }
 
-        // //console.log(tempObj);
-        // let data = {
-        //     "file_ids": fileId,
-        //     "algorithm": resize,
-        //     "params": {
-        //         "width": tempObj.imageWidth,
-        //         "length": tempObj.imageLength
-        //     }
-        // }
+        //console.log(tempObj);
+        let data = {
+            "file_ids": [fileId],
+            "algorithm": "resize",
+            "params": {
+                "width": tempObj.imageWidth,
+                "height": tempObj.imageLength
+            }
+        }
 
-        // fetch(`/${api}/image-processing/`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(data)
-        // })
+        fetch(`${api}/image-processing/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            // mode: 'no-cors',
+            body: JSON.stringify(data)
+        })
 
         setTimeout(() => {
             onHide();

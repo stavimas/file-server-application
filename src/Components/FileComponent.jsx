@@ -11,6 +11,7 @@ const props = {
         headers: {
             authorization: 'authorization-text',
         },
+        
         onChange(info) {
             if (info.file.status !== 'uploading') {
                 console.log(info.file, info.fileList);
@@ -47,6 +48,7 @@ function FileComponent() {
     const [columns, setColumns] = useState([])
     const [popupState, setPopupState] = useState({
         record: {},
+        visible: false,
         img: false,
         x: 0,
         y: 0
@@ -60,8 +62,8 @@ function FileComponent() {
 
     async function fetchFiles() {
         //const response = await fetch('https://jsonplaceholder.typicode.com/photos');
-        //const response = await fetch(`${api}/file-server/`);
-        const response = await fetch('tempFileServ.json');
+        const response = await fetch(`${api}/file-server/`);
+        //const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
     
@@ -131,12 +133,13 @@ function FileComponent() {
         // console.log(record.key);
 
         const dataObject = dataQuery.data.find((item) => item.id === record.key)
-        //console.log(dataObject)
+        console.log(dataObject)
         
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
             setPopupState({
                 record: dataObject,
+                visible: false,
                 x: event.clientX,
                 y: event.clientY
             })
@@ -150,6 +153,7 @@ function FileComponent() {
         if (dataObject.extension === ".png" || dataObject.extension === ".jpg" || dataObject.extension === ".jpeg") {
             setPopupState({
                 record: dataObject,
+                visible: true,
                 img: true,
                 x: event.clientX,
                 y: event.clientY
@@ -159,6 +163,7 @@ function FileComponent() {
         else {
             setPopupState({
                 record: dataObject,
+                visible: true,
                 img: false,
                 x: event.clientX,
                 y: event.clientY
@@ -188,7 +193,7 @@ function FileComponent() {
                     };
                 }}    
             />
-            {popupVisibility && <FilePopup {...popupState}/>}
+            <FilePopup {...popupState}/>
             {/* {console.log(popupState)} */}
         </>
     );
