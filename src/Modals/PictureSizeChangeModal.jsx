@@ -1,14 +1,14 @@
 import { Button, Modal, Form, InputNumber } from 'antd'
 import { useState } from 'react';
 
-function PictureSizeChangeModal({show, onHide, fileId, currentImageSize}) {
+function PictureSizeChangeModal({show, onHide, fileId}) {
     
     const onFinish = (e) => {
         //console.log(e);
 
         // let tempObj = e;
-        // if (!e.imageWidth) { tempObj.imageWidth = currentImageSize; }
-        // if (!e.imageLength) { tempObj.imageLength = currentImageSize; }
+        // if (!e.imageWidth) { tempObj.imageWidth = 1366; }
+        // if (!e.imageLength) { tempObj.imageLength = 768; }
 
         // //console.log(tempObj);
         // let data = {
@@ -36,30 +36,30 @@ function PictureSizeChangeModal({show, onHide, fileId, currentImageSize}) {
     return(
         <>
         <Modal
-          title="Изменение размеров изображения"
-          open={show}
-          footer={null}
-          onCancel={onHide}
-          style={{ maxWidth: 400 }}
+            title="Изменение размеров изображения"
+            open={show}
+            footer={null}
+            onCancel={onHide}
+            style={{ maxWidth: 400 }}
         >
             <Form
                 name="changePictureSizeForm"
                 style={{ maxWidth: 400 }}
-                initialValues={{ imageSize: currentImageSize }}
+                // initialValues={{ imageWidth: 1366, imageLength: 768}}
                 autoComplete="off"
                 onFinish={onFinish}
             >
-                <div style={{'text-align': 'center', display: 'flex', 'flex-direction': 'row'}}>
+                <div style={{textAlign: 'center', display: 'flex', flexDirection: 'row'}}>
                     <Form.Item
                     name="imageWidth"
                     >
-                        <InputNumber style={{width: '165px'}} min={1} max={7680} placeholder={currentImageSize}/>
+                        <InputNumber style={{width: '165px'}} min={1} max={7680} placeholder={1366}/>
                     </Form.Item>
                     <div style={{margin: "2px 8px 0 8px" }}>x</div>
                     <Form.Item
                     name="imageLength"
                     >
-                        <InputNumber style={{width: '165px'}} min={1} max={4800} placeholder={currentImageSize}/>
+                        <InputNumber style={{width: '165px'}} min={1} max={4800} placeholder={768}/>
                     </Form.Item>
                 </div>
                 <Form.Item>

@@ -20,25 +20,25 @@ const props = {
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
-        customRequest: ({onSuccess, onError, file}) => {
-            let data = {
-                "name": file.name,
-                "comment": ""
-            }
-            //console.log(data);
-            fetch('/api/file-server/', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                success: (resp) => {
-                    console.log(resp);
-                    onSuccess(file)
-                },
-                failure: (err) => {
-                    const error = new Error(err)
-                    onError({event: error})
-                }
-            })
-        }
+        // customRequest: ({onSuccess, onError, file}) => {
+        //     let data = {
+        //         "name": file.name,
+        //         "comment": ""
+        //     }
+        //     console.log(data);
+        //     fetch('/api/file-server/', {
+        //         method: 'POST',
+        //         body: JSON.stringify(data),
+        //         success: (resp) => {
+        //             console.log(resp);
+        //             onSuccess(file)
+        //         },
+        //         failure: (err) => {
+        //             const error = new Error(err)
+        //             onError({event: error})
+        //         }
+        //     })
+        // }
     };
 
 function FileComponent() {
@@ -46,11 +46,11 @@ function FileComponent() {
     const [columns, setColumns] = useState([])
     const [popupState, setPopupState] = useState({
         record: {},
-        visible: false, 
         img: false,
         x: 0,
         y: 0
     })
+    const [popupVisibility, setPopupVisibility] = useState(false)
 
     //reactQuery для получения данных о файлах
     const data = useQuery('files', fetchFiles, {
@@ -77,7 +77,7 @@ function FileComponent() {
                 key: "extension"
             },
             {
-                title: "Size",
+                title: "Size (bytes)",
                 dataIndex: "size",
                 key: "size"
             },
@@ -103,6 +103,8 @@ function FileComponent() {
         // }
         data.forEach(el => {
             let tempObj = {
+                "key": el.id,
+                "id": el.id,
                 "name": el.name,
                 "extension": el.extension,
                 "size": el.size,
@@ -120,43 +122,48 @@ function FileComponent() {
         return data;
     }
 
-    function onRowRightClick(record, index, event) {
+    function onRowRightClick(record, index, dataQuery, event) {
         event.preventDefault();
+        //console.log(1);
+        // console.log(dataQuery);
+        // console.log(record.key);
+
+        const dataObject = dataQuery.data.find((item) => item.id === record.key)
+        //console.log(dataObject)
         
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
             setPopupState({
-                record,
-                visible: false,
+                record: dataObject,
                 x: event.clientX,
                 y: event.clientY
             })
+            setPopupVisibility(false)
             document.removeEventListener(`click`, onClickOutside)
             })
         }
 
         //console.log(record);
 
-        //Через react query по fileId ищем файл и загоняем его данные в record
-
-        if (record.id != 1) {
+        if (dataObject.extension === ".png" || dataObject.extension === ".jpg" || dataObject.extension === ".jpeg") {
             setPopupState({
-                record,
-                visible: true,
+                record: dataObject,
                 img: true,
                 x: event.clientX,
                 y: event.clientY
             })
+            setPopupVisibility(true)
         }
         else {
             setPopupState({
-                record,
-                visible: true,
+                record: dataObject,
                 img: false,
                 x: event.clientX,
                 y: event.clientY
             })
+            setPopupVisibility(true)
         }
+
         //console.log(popupState)
         event.stopPropagation();
     }
@@ -175,11 +182,12 @@ function FileComponent() {
                 }}
                 onRow={(record, rowIndex) => {
                     return {
-                        onContextMenu: onRowRightClick.bind(this, record, rowIndex)
+                        onContextMenu: onRowRightClick.bind(this, record, rowIndex, data)
                     };
                 }}    
             />
-            <FilePopup {...popupState}/>
+            {popupVisibility && <FilePopup {...popupState}/>}
+            {/* {console.log(popupState)} */}
         </>
     );
 }

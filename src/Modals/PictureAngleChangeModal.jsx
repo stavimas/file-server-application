@@ -1,7 +1,7 @@
 import { Button, Modal, Form, Input, InputNumber } from 'antd'
 import { useState } from 'react';
 
-function PictureAngleChangeModal({show, onHide, fileId, currentImageAngle}) {
+function PictureAngleChangeModal({show, onHide, fileId}) {
     
     const onFinish = (e) => {
         console.log(e);
@@ -23,7 +23,7 @@ function PictureAngleChangeModal({show, onHide, fileId, currentImageAngle}) {
             <Form
                 name="changePictureSizeForm"
                 style={{ maxWidth: 400 }}
-                initialValues={{ imageAngle: currentImageAngle }}
+                // initialValues={{ imageAngle: currentImageAngle }}
                 autoComplete="off"
                 onFinish={onFinish}
             >
@@ -31,7 +31,7 @@ function PictureAngleChangeModal({show, onHide, fileId, currentImageAngle}) {
                 label="Угол поворота в градусах"
                 name="imageAngle"
                 >
-                    <InputNumber style={{width: '100%'}} min={0} max={180} placeholder={currentImageAngle}/>
+                    <InputNumber style={{width: '100%'}} min={0} max={180} placeholder={0}/>
                 </Form.Item>
 
                 <Form.Item>

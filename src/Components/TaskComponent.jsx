@@ -82,6 +82,7 @@ function TaskComponent() {
 
         data.forEach(el => {
             let tempObj = {
+                "key": el.id,
                 "id": el.id,
                 "status": el.status,
                 "algorithm": el.algorithm,
