@@ -45,8 +45,8 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        const response = await fetch(`${api}/file-server/`);
-        //const response = await fetch('tempFileServ.json');
+        //const response = await fetch(`${api}/file-server/`);
+        const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
     
@@ -61,7 +61,8 @@ function FileComponent() {
                     // if(a.name < b.name) { return -1; }
                     // if(a.name > b.name) { return 1; }
                     // return 0;
-                    return a.title.localeCompare(b.title)
+                    //console.log(a);
+                    return a.name.localeCompare(b.name)
                 },
             },
             {
