@@ -45,8 +45,8 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        //const response = await fetch(`${api}/file-server/`);
-        const response = await fetch('tempFileServ.json');
+        const response = await fetch(`${api}/file-server/`);
+        //const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
     
