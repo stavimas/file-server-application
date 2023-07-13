@@ -183,9 +183,9 @@ function TaskComponent() {
             <TaskPopup {...popupState}/>
             {imageModalVisibility && (
                 <ImageModal 
-                show={imageModalVisibility} 
-                onHide={() => setImageModalVisibility(false)}
-                imageArr={image}
+                    show={imageModalVisibility} 
+                    onHide={() => setImageModalVisibility(false)}
+                    imageArr={image}
                 />
             )}
         </>
