@@ -132,7 +132,7 @@ function TaskComponent() {
         //console.log(popupState)
     }
 
-    async function onRowLeftClick(record, index, dataQuery, event) {
+    async function onRowDoubleClick(record, index, dataQuery, event) {
         event.preventDefault(); 
         event.stopPropagation();
 
@@ -176,7 +176,7 @@ function TaskComponent() {
             onRow={(record, rowIndex) => {
                 return {
                     onContextMenu: onRowRightClick.bind(this, record, rowIndex, data),
-                    onClick: onRowLeftClick.bind(this, record, rowIndex, data)
+                    onDoubleClick: onRowDoubleClick.bind(this, record, rowIndex, data)
                 };
             }}    
              />

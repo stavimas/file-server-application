@@ -58,9 +58,10 @@ function FileComponent() {
                 dataIndex: "name",
                 key: "name",
                 sorter: (a, b) => {
-                    if(a.name < b.name) { return -1; }
-                    if(a.name > b.name) { return 1; }
-                    return 0;
+                    // if(a.name < b.name) { return -1; }
+                    // if(a.name > b.name) { return 1; }
+                    // return 0;
+                    return a.title.localeCompare(b.title)
                 },
             },
             {
@@ -149,7 +150,7 @@ function FileComponent() {
         event.stopPropagation();
     }
 
-    function onRowLeftClick(record, index, dataQuery, event) {
+    function onRowDoubleClick(record, index, dataQuery, event) {
         event.preventDefault(); 
         event.stopPropagation();
         const dataObject = dataQuery.data.find((item) => item.id === record.key)
@@ -165,6 +166,17 @@ function FileComponent() {
             setImage(tempImage);
             setImageModalVisibility(true);
         }
+
+        let tempImage = [
+            {
+                id: dataObject.id,
+                name: dataObject.name,
+                size: dataObject.size
+            }
+        ];
+
+        setImage(tempImage);
+        setImageModalVisibility(true);
     }
 
     return (
@@ -182,7 +194,7 @@ function FileComponent() {
                 onRow={(record, rowIndex) => {
                     return {
                         onContextMenu: onRowRightClick.bind(this, record, rowIndex, data),
-                        onClick: onRowLeftClick.bind(this, record, rowIndex, data)
+                        onDoubleClick: onRowDoubleClick.bind(this, record, rowIndex, data)
                     };
                 }}    
             />
