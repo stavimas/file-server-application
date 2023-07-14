@@ -18,12 +18,22 @@ function TaskComponent() {
     const [image, setImage] = useState([])
 
     async function fetchTasks() {
-        const response = await fetch(`${api}/image-processing/`);
-        //const response = await fetch('tempTaskServ.json');
+        const response = await fetch(`${api}/image-processing/`, {headers: {
+            "ngrok-skip-browser-warning": true
+        }});
+
+        //заглушка
+
+        // const response = await fetch('tempTaskServ.json', {
+        //     headers: {
+        //         "ngrok-skip-browser-warning": true
+        //     }
+        // });
         //console.log(response);
+
         const data =  await response.json();
-        
         //console.log(data);
+        
         const tempDataSource = [];
 
         const tempColumns = [
@@ -53,7 +63,6 @@ function TaskComponent() {
                 render: (text) => {
                     if (text !== null) {
                         return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
-
                         //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
@@ -65,7 +74,7 @@ function TaskComponent() {
                 render: (text) => {
                     if (text !== null) {
                         return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
-                        //return <Button icon={<FileOutlined />}>{text}</Button>
+                        //return <Button icon={<FileOutlined />} href='sokka.png' target="_blank"></Button>
                     }
                 }
             },
@@ -139,12 +148,20 @@ function TaskComponent() {
         const dataObject = dataQuery.data.find((item) => item.id === record.key);
         console.log(dataObject);
         if (dataObject.source_id && dataObject.result_id) {
-            let sourceImg = await fetch(`${api}/file-server/${dataObject.source_id}`).then(response => response.json());
-            let resultImg = await fetch(`${api}/file-server/${dataObject.result_id}`).then(response => response.json());
+            let sourceImg = await fetch(`${api}/file-server/${dataObject.source_id}`, {
+                headers: {
+                    "ngrok-skip-browser-warning": true
+                }
+            }).then(response => response.json());
+            let resultImg = await fetch(`${api}/file-server/${dataObject.result_id}`, {
+                headers: {
+                    "ngrok-skip-browser-warning": true
+                }
+            }).then(response => response.json());
 
             // console.log(dataObject);
-            // console.log(sourceImg);
-            // console.log(resultImg);
+            console.log(sourceImg);
+            console.log(resultImg);
                 
             let tempImage = [
                 {
@@ -162,6 +179,24 @@ function TaskComponent() {
             setImage(tempImage);
             setImageModalVisibility(true);
         }
+
+        //заглушка 
+
+        // let tempImage = [
+        //     {
+        //         id: 1,
+        //         name: "sokka.png",
+        //         size: 1
+        //     },
+        //     {
+        //         id: 2,
+        //         name: "sokka2.png",
+        //         size: 2
+        //     }
+        // ];
+
+        // setImage(tempImage);
+        // setImageModalVisibility(true);
     }
 
     return (

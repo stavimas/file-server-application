@@ -14,14 +14,28 @@ const FilePopup = ({record, visible, img, x, y}) => {
     //console.log(record);
 
     async function downLoadFile(fileId) {
-        const result = await fetch(`${api}/file-server/${fileId}/download`);
-        return result;
+        fetch(`${api}/file-server/${fileId}/download`, {
+            headers: {
+            "ngrok-skip-browser-warning": true,
+            }
+        }).then( res => res.blob() )
+        .then( blob => {
+            var file = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = file;
+            link.setAttribute('download', 'file');
+            link.click();
+          //window.location.assign(file);
+        });
         //return 0;
     }
 
     async function deleteFile(fileId) {
         const result = await fetch(`${api}/file-server/${fileId}`, {
             method: "DELETE",
+            headers: {
+                "ngrok-skip-browser-warning": true
+            }
         });
         return result;
         //return 0;
@@ -40,6 +54,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": true
             },
             body: JSON.stringify(data)
         })
@@ -60,6 +75,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": true
             },
             body: JSON.stringify(data)
         })
@@ -131,7 +147,10 @@ async function reloadTask(taskId) {
     {
         method: "POST",
         // body: JSON.stringify(data)
-        mode: 'no-cors'
+        // mode: 'no-cors',
+        headers: {
+            "ngrok-skip-browser-warning": true
+        },
     });
     return result;
 }

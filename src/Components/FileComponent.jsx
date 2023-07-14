@@ -11,6 +11,7 @@ const props = {
         method: 'POST',
         headers: {
             authorization: 'authorization-text',
+            "ngrok-skip-browser-warning": true
         },
         
         onChange(info) {
@@ -45,7 +46,11 @@ function FileComponent() {
       });
 
     async function fetchFiles() {
-        const response = await fetch(`${api}/file-server/`);
+        const response = await fetch(`${api}/file-server/`, {
+            headers: {
+                "ngrok-skip-browser-warning": true
+            }
+        })
         //const response = await fetch('tempFileServ.json');
         const data =  await response.json();
         const tempDataSource = []
@@ -58,10 +63,6 @@ function FileComponent() {
                 dataIndex: "name",
                 key: "name",
                 sorter: (a, b) => {
-                    // if(a.name < b.name) { return -1; }
-                    // if(a.name > b.name) { return 1; }
-                    // return 0;
-                    //console.log(a);
                     return a.name.localeCompare(b.name)
                 },
             },
@@ -168,16 +169,18 @@ function FileComponent() {
             setImageModalVisibility(true);
         }
 
-        let tempImage = [
-            {
-                id: dataObject.id,
-                name: dataObject.name,
-                size: dataObject.size
-            }
-        ];
+        //заглушка
 
-        setImage(tempImage);
-        setImageModalVisibility(true);
+        // let tempImage = [
+        //     {
+        //         id: 1,
+        //         name: 'sokka.png',
+        //         size: 1
+        //     }
+        // ];
+
+        // setImage(tempImage);
+        // setImageModalVisibility(true);
     }
 
     return (

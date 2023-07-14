@@ -21,6 +21,7 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": true
             },
             body: JSON.stringify(data)
         })
