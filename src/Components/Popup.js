@@ -13,7 +13,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
 
     //console.log(record);
 
-    async function downLoadFile(fileId) {
+    async function downLoadFile(fileId, fileName) {
         fetch(`${api}/file-server/${fileId}/download`, {
             headers: {
             "ngrok-skip-browser-warning": true,
@@ -24,7 +24,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
             var file = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = file;
-            link.setAttribute('download', 'file');
+            link.setAttribute('download', fileName);
             link.click();
           //window.location.assign(file);
         });
@@ -88,7 +88,7 @@ const FilePopup = ({record, visible, img, x, y}) => {
         <>
             {visible &&
                 <ul className="popup" style={{left: `${x}px`, top: `${y}px`}}>
-                    <li onClick={() => downLoadFile(record.id)}>Скачать файл</li>
+                    <li onClick={() => downLoadFile(record.id, record.name)}>Скачать файл</li>
                     <li onClick={() => deleteFile(record.id)}>Удалить файл</li>
                     <li onClick={() => setFileNameChangeModalVisible(true)}>Изменить имя файла</li>
                     {img && (

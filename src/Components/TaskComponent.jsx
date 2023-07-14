@@ -33,7 +33,7 @@ function TaskComponent() {
 
         const data =  await response.json();
         //console.log(data);
-        
+
         const tempDataSource = [];
 
         const tempColumns = [
@@ -160,8 +160,8 @@ function TaskComponent() {
             }).then(response => response.json());
 
             // console.log(dataObject);
-            console.log(sourceImg);
-            console.log(resultImg);
+            // console.log(sourceImg);
+            // console.log(resultImg);
                 
             let tempImage = [
                 {

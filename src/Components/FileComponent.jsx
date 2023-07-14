@@ -53,6 +53,7 @@ function FileComponent() {
         })
         //const response = await fetch('tempFileServ.json');
         const data =  await response.json();
+        console.log(data);
         const tempDataSource = []
     
         //console.log(data);
