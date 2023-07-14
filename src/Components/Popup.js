@@ -17,7 +17,8 @@ const FilePopup = ({record, visible, img, x, y}) => {
         fetch(`${api}/file-server/${fileId}/download`, {
             headers: {
             "ngrok-skip-browser-warning": true,
-            }
+            },
+            //mode: "no-cors"
         }).then( res => res.blob() )
         .then( blob => {
             var file = window.URL.createObjectURL(blob);

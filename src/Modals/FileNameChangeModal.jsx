@@ -50,7 +50,7 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
                 <Form.Item
                 label="Имя файла"
                 name="fileName"
-                rules={[{pattern: new RegExp(/^[a-zA-Z0-9]*$/), message: "Некорректное имя файла"}]}
+                rules={[{pattern: new RegExp(/^[\w,\s-, \^]*$/), message: "Некорректное имя файла"}]}
                 >
                     <Input placeholder={currFileName}/>
                 </Form.Item>
