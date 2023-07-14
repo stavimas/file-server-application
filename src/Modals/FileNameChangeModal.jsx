@@ -7,23 +7,24 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
 
     const onFinish = (e) => {
         //console.log(e);
-        // let tempObj = e;
-        // if (!e.fileName) { tempObj.fileName = currFileName; }
-        // if (!e.fileComm) { tempObj.fileComm = currFileComm; }
+        let tempObj = e;
+        if (!e.fileName) { tempObj.fileName = currFileName; }
+        if (!e.fileComm) { tempObj.fileComm = currFileComm; }
 
-        // //console.log(tempObj);
-        // let data = {
-        //     "name": tempObj.fileName,
-        //     "comment": tempObj.fileComm
-        // }
+        //console.log(tempObj);
+        let data = {
+            "name": tempObj.fileName,
+            "comment": tempObj.fileComm
+        }
 
-        // fetch(`/${api}/file-server/${fileId}`, {
-        //     method: "PUT",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(data)
-        // })
+        fetch(`${api}/file-server/${fileId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": true
+            },
+            body: JSON.stringify(data)
+        })
 
         setTimeout(() => {
             onHide();
@@ -42,8 +43,6 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
             <Form
                 onFinish={onFinish}
                 name="changeFileNameForm"
-                // labelCol={{ span: 4}}
-                // wrapperCol={{ span: 16}}
                 style={{ maxWidth: 400 }}
                 initialValues={{ fileName: currFileName, fileComm: currFileComm }}
                 autoComplete="off"
@@ -51,6 +50,7 @@ function FileNameChangeModal({show, onHide, fileId, currFileName, currFileComm})
                 <Form.Item
                 label="Имя файла"
                 name="fileName"
+                rules={[{pattern: new RegExp(/^[\w,\s-, \^]*$/), message: "Некорректное имя файла"}]}
                 >
                     <Input placeholder={currFileName}/>
                 </Form.Item>

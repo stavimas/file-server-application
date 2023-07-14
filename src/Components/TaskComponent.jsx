@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { TaskPopup } from './Popup';
 import { FileOutlined } from '@ant-design/icons';
 import { api } from '../consts';
+import ImageModal from '../Modals/ImageModal';
 
 function TaskComponent() {
 
@@ -13,23 +14,37 @@ function TaskComponent() {
         visible: false, 
         x: 0, y: 0
     })
+    const [imageModalVisibility, setImageModalVisibility] = useState(false)
+    const [image, setImage] = useState([])
 
     async function fetchTasks() {
-        //const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-        const response = await fetch(`${api}/image-processing/`);
-        //const response = await fetch('tempTaskServ.json');
-        console.log(response);
+        const response = await fetch(`${api}/image-processing/`, {headers: {
+            "ngrok-skip-browser-warning": true
+        }});
+
+        //заглушка
+
+        // const response = await fetch('tempTaskServ.json', {
+        //     headers: {
+        //         "ngrok-skip-browser-warning": true
+        //     }
+        // });
+        //console.log(response);
+
         const data =  await response.json();
-        
-        console.log(data);
+        //console.log(data);
+
         const tempDataSource = [];
-        //const tempColumns = [];
 
         const tempColumns = [
             {
                 title: "Id",
                 dataIndex: "id",
-                key: "id"
+                key: "id",
+                sorter: {
+                    compare: (a, b) => a.id - b.id,
+                    multiple: 2,
+                  },
             },
             {
                 title: "Status",
@@ -47,13 +62,10 @@ function TaskComponent() {
                 key: "source",
                 render: (text) => {
                     if (text !== null) {
-                        fetch(`${api}/file-server/${text}/download`).then((response) => {
-                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        })
+                        return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
                         //return <Button icon={<FileOutlined />}>{text}</Button>
                     }
                 }
-                // render: (text) => <Button icon={<FileOutlined />}>{text}</Button>
             },
             {
                 title: "Result",
@@ -61,32 +73,18 @@ function TaskComponent() {
                 key: "result",
                 render: (text) => {
                     if (text !== null) {
-                        fetch(`${api}/file-server/${text}/download`).then((response) => {
-                            return <Button icon={<FileOutlined />} href={response} target="_blank">{response}</Button>
-                        })
-                        //return <Button icon={<FileOutlined />}>{text}</Button>
+                        return <Button icon={<FileOutlined />} href={`${api}/file-server/${text}/download`} target="_blank"></Button>
+                        //return <Button icon={<FileOutlined />} href='sokka.png' target="_blank"></Button>
                     }
                 }
             },
         ]
-    
-        // for (let objKey of Object.keys(data[0])) {
-        //     let tempObj = {
-        //         title: objKey.charAt(0).toUpperCase() + objKey.slice(1),
-        //         dataIndex: objKey,
-        //         key: objKey
-        //     }
-        //     tempColumns.push(tempObj)
-        // }
-        // data.forEach(el => {
-        //     tempDataSource.push(el);
-        // });
 
         data.forEach(el => {
             let tempObj = {
                 "key": el.id,
                 "id": el.id,
-                "status": el.status,
+                "status": el.status.toLowerCase(),
                 "algorithm": el.algorithm,
                 "source": el.source_id,
                 "result": el.result_id
@@ -110,6 +108,7 @@ function TaskComponent() {
         event.stopPropagation();
 
         const dataObject = dataQuery.data.find((item) => item.id === record.key)
+        dataObject.status = dataObject.status.toLowerCase();
 
         if (!popupState.visible) {
             document.addEventListener(`click`, function onClickOutside() {
@@ -142,6 +141,64 @@ function TaskComponent() {
         //console.log(popupState)
     }
 
+    async function onRowDoubleClick(record, index, dataQuery, event) {
+        event.preventDefault(); 
+        event.stopPropagation();
+
+        const dataObject = dataQuery.data.find((item) => item.id === record.key);
+        console.log(dataObject);
+        if (dataObject.source_id && dataObject.result_id) {
+            let sourceImg = await fetch(`${api}/file-server/${dataObject.source_id}`, {
+                headers: {
+                    "ngrok-skip-browser-warning": true
+                }
+            }).then(response => response.json());
+            let resultImg = await fetch(`${api}/file-server/${dataObject.result_id}`, {
+                headers: {
+                    "ngrok-skip-browser-warning": true
+                }
+            }).then(response => response.json());
+
+            // console.log(dataObject);
+            // console.log(sourceImg);
+            // console.log(resultImg);
+                
+            let tempImage = [
+                {
+                    id: sourceImg.id,
+                    name: sourceImg.name,
+                    size: sourceImg.size
+                },
+                {
+                    id: resultImg.id,
+                    name: resultImg.name,
+                    size: resultImg.size
+                }
+            ];
+
+            setImage(tempImage);
+            setImageModalVisibility(true);
+        }
+
+        //заглушка 
+
+        // let tempImage = [
+        //     {
+        //         id: 1,
+        //         name: "sokka.png",
+        //         size: 1
+        //     },
+        //     {
+        //         id: 2,
+        //         name: "sokka2.png",
+        //         size: 2
+        //     }
+        // ];
+
+        // setImage(tempImage);
+        // setImageModalVisibility(true);
+    }
+
     return (
         <>
             <Table 
@@ -153,11 +210,19 @@ function TaskComponent() {
             }}
             onRow={(record, rowIndex) => {
                 return {
-                    onContextMenu: onRowRightClick.bind(this, record, rowIndex, data)
+                    onContextMenu: onRowRightClick.bind(this, record, rowIndex, data),
+                    onDoubleClick: onRowDoubleClick.bind(this, record, rowIndex, data)
                 };
             }}    
              />
             <TaskPopup {...popupState}/>
+            {imageModalVisibility && (
+                <ImageModal 
+                    show={imageModalVisibility} 
+                    onHide={() => setImageModalVisibility(false)}
+                    imageArr={image}
+                />
+            )}
         </>
     );
 }

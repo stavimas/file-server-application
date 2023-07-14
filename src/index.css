@@ -56,3 +56,12 @@ code {
 .popup li > i {
   margin-right: 8px;
 }
+
+.ant-image {
+  display: flex;
+  flex: 1 1 100%;
+}
+
+.ant-image-img.image-modal__image {
+  object-fit: contain;
+}
